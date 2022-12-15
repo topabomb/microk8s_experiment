@@ -10,9 +10,9 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "dev": "quasar dev -m spa",
     "build": "quasar build -m spa",
-    "build:image:dev": "npm run build && docker build -t 172.18.72.18:32000/website-app ./",
-    "pull:image:dev": "npm run build:image:dev && docker pull 172.18.72.18:32000/website-app",
-    "deploy:dev": "npm run pull:image:dev && kubectl apply -n default -f ./deploy/deployment.yaml"
+    "build:image:dev": "npm run build && docker build -t 172.18.72.18:32000/website-app:latest ./",
+    "push:image:dev": "npm run build:image:dev && docker push 172.18.72.18:32000/website-app:latest",
+    "deploy:dev": "npm run push:image:dev && kubectl apply -n default -f ./deploy/deployment.yaml"
   },
   "dependencies": {
     "axios": "^0.21.1",

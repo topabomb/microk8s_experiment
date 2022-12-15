@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: website-container
-          image: localhost:32000/website-app
+          image: localhost:32000/website-app:latest
           ports:
             - containerPort: 80
 ---
@@ -32,7 +32,7 @@ spec:
     app: website
   type: ClusterIP
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: site-ingress
@@ -41,13 +41,33 @@ metadata:
     nginx.ingress.kubernetes.io/limit-rpm: '6000' #单副本每分钟最大请求数
     nginx.ingress.kubernetes.io/limit-connections: '10' #每ip最大连接数
     # http重定向
-    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    # url rewrite
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
+  tls:
+  - hosts:
+    - dashboard.k8s.local
+    secretName: tls-test-ingress
   rules:
-    - http:
+    #使用域名访问
+    - host: dashboard.k8s.local
+      http:
         paths:
-          - path: /
+          - path: /site-app/(.*)
             pathType: Prefix
             backend:
-              serviceName: site-service
-              servicePort: 80
+              service:
+                name: site-service
+                port:
+                  number: 80
+    #绑定vm ip
+    - http:
+        paths:
+          - path: /site-app/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: site-service
+                port:
+                  number: 80
