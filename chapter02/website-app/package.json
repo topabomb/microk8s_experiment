@@ -12,7 +12,8 @@
     "build": "quasar build -m spa",
     "build:image:dev": "npm run build && docker build -t 172.18.72.18:32000/website-app:latest ./",
     "push:image:dev": "npm run build:image:dev && docker push 172.18.72.18:32000/website-app:latest",
-    "deploy:dev": "npm run push:image:dev && kubectl apply -n default -f ./deploy/deployment.yaml"
+    "deploy:dev": "npm run push:image:dev && kubectl apply -n default -f ./deploy/deployment.yaml",
+    "patch:dev": "kubectl set image deployment/site-app website-container=localhost:32000/website-app"
   },
   "dependencies": {
     "axios": "^0.21.1",

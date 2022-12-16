@@ -1,0 +1,11 @@
+.env*
+node_modules
+build
+dist
+logs
+configures
+*.log
+*.zip
+*.7z
+*.zip
+state*

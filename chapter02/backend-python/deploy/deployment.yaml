@@ -1,0 +1,116 @@
+# 部署文件，会创建Pod及Replicaset
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pybackend-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pybackend
+  template:
+    metadata:
+      labels:
+        app: pybackend
+    spec:
+      containers:
+        - name: pybackend-container
+          image: localhost:32000/pybackend-app:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 900m #=0.9 core
+              memory: 200Mi
+            requests:
+              cpu: 450m #创建资源时分配的cpu量，也是hpa自动伸缩的百分率的基数
+---
+#弹性伸缩，通过scaleTargetRef.name指定Deployment，本处使用v2 api支持更多伸缩配置，具体参考 https://kubernetes.io/zh-cn/docs/tasks/run-application/horizontal-pod-autoscale/
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: pybackend-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: pybackend-deploy
+  minReplicas: 1
+  maxReplicas: 12
+  metrics:
+  - type: Resource
+    # 资源限制
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75 #与pod中的request值关联，request值作为基数
+  behavior:
+    # 加快扩缩容速度
+    scaleUp:
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 20
+        periodSeconds: 15
+---
+#开放内网服务，通过selector.app指定Deployment对应的Replicaset中的Pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: pybackend-service
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: pybackend
+  type: ClusterIP
+---
+#开放外部入口，通过backend.service 指定开放的Service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pybackend-ingress
+  annotations:
+    # 流量限制
+    #nginx.ingress.kubernetes.io/limit-rpm: '6000' #单副本每分钟最大请求数
+    #nginx.ingress.kubernetes.io/limit-connections: '10' #每ip最大连接数
+    # http重定向
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    # url rewrite
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  tls:
+  - hosts:
+    - dashboard.k8s.local
+    secretName: tls-test-ingress
+  rules:
+    #使用域名访问
+    - host: dashboard.k8s.local
+      http:
+        paths:
+          - path: /site-app/pyapi/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: pybackend-service
+                port:
+                  number: 80
+    #绑定vm ip
+    - http:
+        paths:
+          - path: /site-app/pyapi/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: pybackend-service
+                port:
+                  number: 80
