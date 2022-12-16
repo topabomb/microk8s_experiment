@@ -7,7 +7,7 @@
     "build:image:dev": "docker build -t 172.18.72.18:32000/pybackend-app:latest ./",
     "push:image:dev": "npm run build:image:dev && docker push 172.18.72.18:32000/pybackend-app:latest",
     "deploy:dev": "npm run push:image:dev && kubectl apply -n default -f ./deploy/deployment.yaml",
-    "patch:dev": "kubectl set image deployment/pybackend-deploy pybackend-container=localhost:32000/pybackend-app"
+    "patch:dev": "kubectl set image deployment/pybackend-deploy pybackend-container=localhost:32000/pybackend-app:latest"
   },
   "author": "",
   "license": "ISC"
