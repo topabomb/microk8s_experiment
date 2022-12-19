@@ -2,6 +2,7 @@
 cache:
   paths:
     - chapter02/backend-app/node_modules
+    - chapter02/backend-app/dist
 #安装与编译
 build-chapter02/backend-app: 
   stage: build
