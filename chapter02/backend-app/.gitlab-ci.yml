@@ -1,4 +1,4 @@
-#使用缓存重用node_modules
+#使用缓存重用node_modules与dist
 cache:
   paths:
     - chapter02/backend-app/node_modules
@@ -16,18 +16,16 @@ unit-test-chapter02/backend-app:
   stage: test 
   script:
     - echo "Running unit tests..."
-#development部署
+#development部署，使用docker kaniko镜像进行打包，参考 https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
 deploy-build-chapter02-development: 
   stage: deploy 
   image:
     # name: gcr.io/kaniko-project/executor:v1.9.0-debug
     name: topabomb/kaniko-executor:v1.9.0-debug
     entrypoint: [""]
-
   script:
     - echo "Deploying chapter02/backend-app application to development..."
     - /kaniko/executor
-      --insecure
       --context "${CI_PROJECT_DIR}/chapter02/backend-app"
       --dockerfile "${CI_PROJECT_DIR}/chapter02/backend-app/Dockerfile"
       --destination "172.18.72.18:32000/backend-app:${CI_COMMIT_TAG}" #--destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
