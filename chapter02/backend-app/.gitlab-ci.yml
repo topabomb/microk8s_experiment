@@ -19,7 +19,8 @@ unit-test-chapter02/backend-app:
 deploy-build-chapter02-development: 
   stage: deploy 
   image:
-    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    # name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    name: topabomb/kaniko-executor:v1.9.0-debug
     entrypoint: [""]
   script:
     - echo "Deploying chapter02/backend-app application to development..."
