@@ -1,0 +1,2 @@
+include:
+  - local: 'backend-app/.gitlab-ci.yml'
