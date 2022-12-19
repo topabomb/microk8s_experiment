@@ -26,6 +26,7 @@ deploy-build-chapter02-development:
   script:
     - echo "Deploying chapter02/backend-app application to development..."
     - /kaniko/executor
+      --skip-tls-verify
       --insecure
       --insecure-registry "172.18.72.18:32000"
       --context "${CI_PROJECT_DIR}/chapter02/backend-app"
