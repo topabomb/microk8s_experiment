@@ -1,2 +1,2 @@
 include:
-  - local: './backend-app/.gitlab-ci.yml'
+  - local: 'chapter02/backend-app/.gitlab-ci.yml'
