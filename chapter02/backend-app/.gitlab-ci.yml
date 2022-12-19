@@ -1,0 +1,17 @@
+#使用缓存重用node_modules
+cache:
+  paths:
+    - chapter02/backend-app/node_modules
+#安装与编译
+build-chapter02/backend-app: 
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - cd chapter02/backend-app/
+    - npm install --silent
+    - npm run generate
+#执行单元测试
+unit-test-chapter02/backend-app: 
+  stage: test 
+  script:
+    - echo "Running unit tests..."
