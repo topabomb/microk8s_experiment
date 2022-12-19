@@ -13,6 +13,9 @@ build-chapter02/backend-app:
     - npm run build
 #执行单元测试
 unit-test-chapter02/backend-app: 
+  image:
+      name: bitnami/kubectl:latest
+      entrypoint: ['']
   stage: test 
   script:
     - echo "Running unit tests..."
