@@ -9,7 +9,7 @@ build-chapter02/backend-app:
     - echo "Compiling the code..."
     - cd chapter02/backend-app/
     - npm install --silent
-    - npm run generate
+    - npm run build:image:dev
 #执行单元测试
 unit-test-chapter02/backend-app: 
   stage: test 
