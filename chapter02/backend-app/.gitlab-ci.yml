@@ -19,6 +19,7 @@ unit-test-chapter02/backend-app:
   stage: test 
   script:
     - echo "Running unit tests..."
+    - kubectl config get-contexts
     - kubectl get pods
 
 #development部署，使用docker kaniko镜像进行打包，参考 https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
