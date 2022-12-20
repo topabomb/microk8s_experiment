@@ -52,4 +52,4 @@ apply-build-chapter02-k8s:
     - kubectl config view
     - kubectl get pods --insecure-skip-tls-verify
     - cd chapter02/backend-app/
-    - kubectl apply -n default -f ./deploy/deployment.yaml
+    - kubectl apply -n default -f ./deploy/deployment.yaml --insecure-skip-tls-verify
