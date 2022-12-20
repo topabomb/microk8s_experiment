@@ -1,0 +1,20 @@
+spec:
+  template:
+    spec:
+      containers:
+        - name: gitlab-agent
+          args:
+            - --ca-cert-file=/tmp/172.18.72.28.crt
+            - '--token-file=/etc/agentk/secrets/token'
+            - '--kas-address=wss://172.18.72.28//-/kubernetes-agent/'
+          volumeMounts:
+          - name: ca-pemstore-volume
+            mountPath: /tmp/172.18.72.28.crt
+            subPath: 172.18.72.28.crt
+      volumes:
+      - name: ca-pemstore-volume
+        configMap:
+          name: ca-pemstore
+          items:
+          - key: 172.18.72.28.crt
+            path: 172.18.72.28.crt
