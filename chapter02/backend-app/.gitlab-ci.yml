@@ -44,3 +44,14 @@ deploy-build-chapter02-development:
     - kubectl config use-context topabomb/microk8s_experiment:microk8s
     - kubectl get pods --insecure-skip-tls-verify
     - npm run deploy:dev
+apply-build-chapter02-k8s: 
+  image:
+      name: bitnami/kubectl:latest
+      entrypoint: ['']
+  stage: apply 
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context topabomb/microk8s_experiment:microk8s
+    - kubectl config view
+    - kubectl get pods --insecure-skip-tls-verify
+    - npm run deploy:dev
