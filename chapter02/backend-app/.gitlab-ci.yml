@@ -20,6 +20,7 @@ unit-test-chapter02/backend-app:
   script:
     - echo "Running unit tests..."
     - kubectl config get-contexts
+    - kubectl config use-context topabomb/microk8s_experiment:microk8s
     - kubectl get pods
 
 #development部署，使用docker kaniko镜像进行打包，参考 https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
