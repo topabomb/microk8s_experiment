@@ -40,3 +40,6 @@ deploy-build-chapter02-development:
       --context "${CI_PROJECT_DIR}/chapter02/backend-app"
       --dockerfile "${CI_PROJECT_DIR}/chapter02/backend-app/Dockerfile"
       --destination "${REGISTRY_URL}/backend-app:${IMAGE_TAG}" #--destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+    - kubectl config get-contexts
+    - kubectl config use-context topabomb/microk8s_experiment:microk8s
+    - npm run deploy:dev
