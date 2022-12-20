@@ -42,4 +42,5 @@ deploy-build-chapter02-development:
       --destination "${REGISTRY_URL}/backend-app:${IMAGE_TAG}" #--destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
     - kubectl config get-contexts
     - kubectl config use-context topabomb/microk8s_experiment:microk8s
+    - kubectl get pods --insecure-skip-tls-verify
     - npm run deploy:dev
