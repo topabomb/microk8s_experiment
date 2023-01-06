@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-singleton-config
+  labels:
+    app: redis-singleton
+data:
+  redis.conf: |-
+    dir /srv
+    port 6379
+    bind 0.0.0.0
+    appendonly yes
+    daemonize no
+    #protected-mode no
+    requirepass 141592
+    pidfile /srv/redis-6379.pid
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-singleton
+  labels:
+    app: redis-singleton
+spec:
+  containers:
+  - name: redis-singleton-container
+    image: redis:6.2
+    command:
+      - "sh"
+      - "-c"
+      - "redis-server /usr/local/redis/redis.conf"
+    ports:
+    - containerPort: 6379
+    resources:
+      limits:
+        cpu: 800m
+        memory: 2048Mi
+      requests:
+        cpu: 500m
+        memory: 1024Mi
+    livenessProbe:
+      tcpSocket:
+        port: 6379
+      initialDelaySeconds: 300
+      timeoutSeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+    readinessProbe:
+      tcpSocket:
+        port: 6379
+      initialDelaySeconds: 5
+      timeoutSeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+    volumeMounts:
+    - name: config
+      mountPath:  /usr/local/redis/redis.conf
+      subPath: redis.conf
+  volumes:
+  - name: config
+    configMap:
+      name: redis-singleton-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-singleton
+  labels:
+    app: redis-singleton
+spec:
+  ports:
+    - port: 6379
+      protocol: TCP
+      targetPort: 6379
+  selector:
+    app: redis-singleton
+  type: ClusterIP

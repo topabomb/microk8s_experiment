@@ -1,0 +1,32 @@
+ingress:
+ enabled: true
+ hosts:
+   - oauth2-gitlab.nawarat.io
+image:
+ tag: "v7.0.1"
+
+config:
+ clientID: "0de23f592d2a6f01e09d8cee4d9e612728b1dc2b4da28af3e83a2826a2497ded"
+ clientSecret: "3f01355998cb91752a25b00ac14a1c65444ed22492225c35a85ec443c8524cdb"
+ cookieSecret: "ge0fG6UyZhDnEyiq5OqMuA=="
+
+ configFile: |-
+   provider = "gitlab"
+   provider_display_name = "whatever"
+   redirect_url = "https://oauth2-gitlab.nawarat.io/oauth2/callback" # the same as in Gitlab !!!
+   login_url = "https://gitlab-k8s.nawarat.io/oauth/authorize"
+   redeem_url="https://gitlab-k8s.nawarat.io/oauth/token"
+   oidc_jwks_url="https://gitlab-k8s.nawarat.io/oauth/discovery/keys"
+   validate_url="https://gitlab-k8s.nawarat.io/api/v4/user"
+   oidc_issuer_url="https://gitlab-k8s.nawarat.io"
+extraArgs:
+ whitelist-domain: ".nawarat.io"
+ upstream: "file:///dev/null"
+ cookie-domain: ".nawarat.io"
+ email-domain: "*"
+ gitlab-group: ""
+ cookie-name: "chocolate-cookie"
+
+metrics:
+ # Enable Prometheus metrics endpoint
+ enabled: false

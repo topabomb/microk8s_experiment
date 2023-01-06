@@ -30,7 +30,8 @@ export default defineComponent({
     const scrollAreaRef = ref(null);
     const messages = ref([] as { name: string; text: string; sent: boolean }[]);
     setInterval(() => {
-      fetch('api/hi').then((resp) => {
+      fetch('http://localhost:3000/hi').then((resp) => {
+        //fetch('api/hi').then((resp) => {
         if (resp.ok) {
           resp.json().then((data) => {
             const ask = { name: 'me', text: 'timestamp?', sent: true };

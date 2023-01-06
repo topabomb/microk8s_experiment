@@ -13,27 +13,33 @@
     "build:image:dev": "npm run build && docker build -t 172.18.72.18:32000/website-app:latest ./",
     "push:image:dev": "npm run build:image:dev && docker push 172.18.72.18:32000/website-app:latest",
     "deploy:dev": "npm run push:image:dev && kubectl apply -n default -f ./deploy/deployment.yaml",
-    "patch:dev": "kubectl set image deployment/site-app website-container=localhost:32000/website-app"
+    "patch:dev": "kubectl set image deployment/site-app website-container=localhost:32000/website-app",
+    "tauri": "tauri",
+    "copy_rename": "rimraf dist/binaries/backend-app*.* && copyfiles -f ../backend-app/dist/binaries/backend-app.exe dist/binaries && renamer --find backend-app.exe --replace backend-app-x86_64-pc-windows-msvc.exe dist/binaries/*",
+    "tauri:build": "npm run copy_rename && npm run tauri build"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "vue-i18n": "^9.2.2",
-    "pinia": "^2.0.11",
     "@quasar/extras": "^1.0.0",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "pinia": "^2.0.11",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
+    "vue-i18n": "^9.2.2",
     "vue-router": "^4.0.0"
   },
   "devDependencies": {
+    "@quasar/app-webpack": "^3.0.0",
+    "@tauri-apps/cli": "^1.2.2",
+    "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.10.0",
-    "eslint-plugin-vue": "^9.0.0",
     "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.0.0",
     "prettier": "^2.5.1",
-    "@types/node": "^12.20.21",
-    "@quasar/app-webpack": "^3.0.0"
+    "renamer": "^4.0.0"
   },
   "browserslist": [
     "last 10 Chrome versions",

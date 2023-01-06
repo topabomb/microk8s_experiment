@@ -1,5 +1,7 @@
 import restana from "restana";
+import cors from 'cors'
 const service = restana();
+service.use(cors())
 const port = 3000;
 service.get("/hi", async (req, res) =>
     res.send({
